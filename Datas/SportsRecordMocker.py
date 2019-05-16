@@ -7,11 +7,13 @@ import pandas as pd
 
 sys.path.append(os.getcwd())  # 将整个项目加入解析器的搜索目录
 
-from Utils.Linq import Linq
-from Utils.TimeUtil import random_start_end_time
-from Models.Sports import *
-from Datas.DataBaseConf import db
+from Conf.LoggerConf import logger
+from Utils.DictionaryUtil import *
 from Utils.PandasUtil import split_data_frame_list
+from Conf.DataBaseConf import db
+from Models.Sports import *
+from Utils.TimeUtil import random_start_end_time
+from Utils.Linq import Linq
 
 class SportsRecordMocker:
 
@@ -51,34 +53,35 @@ class SportsRecordMocker:
             dbtabs = db.get_tables()
             if (dbtabs):
                 db.drop_tables(tabs)
-                print('drop tables: {}'.format(dbtabs))
+                logger.info('drop tables: {}'.format(dbtabs))
             db.create_tables(tabs)
-            print('createname tables: {}'.format(tabs))
+            logger.info('createname tables: {}'.format(tabs))
 
     def mock_dic_cgy(self):
         with db.atomic():
             cot = DictionaryCategory.select().count()
             if cot == 0:
-                # print(self.dic_cgy_datas)
+                # logger.info(self.dic_cgy_datas)
                 DictionaryCategory.insert_many(self.dic_cgy_datas).execute()
-                print('insert {} item to dictionarycategory.'.format(
+                logger.info('insert {} item to dictionarycategory.'.format(
                     len(self.dic_cgy_datas)))
 
     def mock_dic(self):
         with db.atomic():
             cot = Dictionary.select().count()
             if cot == 0:
-                # print(self.dic_datas)
+                # logger.info(self.dic_datas)
                 Dictionary.insert_many(self.dic_datas).execute()
-                print('insert {} item to dictionary.'.format(len(self.dic_datas)))
+                logger.info('insert {} item to dictionary.'.format(
+                    len(self.dic_datas)))
 
     def mock_person(self):
         with db.atomic():
             cot = Person.select().count()
             if cot == 0:
-                # print(self.dic_datas)
+                # logger.info(self.dic_datas)
                 Person.insert_many(self.person_datas).execute()
-                print('insert {} item to person.'.format(
+                logger.info('insert {} item to person.'.format(
                     len(self.person_datas)))
 
     def __get_dic_ids(self, dic_data, dic_cgy_data, category_name):
@@ -86,7 +89,7 @@ class SportsRecordMocker:
             lambda x: x.name == category_name).id
 
         dic_ids = Linq(dic_data).where(lambda x: x.category.id ==
-                                        dic_cay_id).select(lambda x: str(x.id)).to_list()
+                                       dic_cay_id).select(lambda x: str(x.id)).to_list()
 
         return dic_ids
 
@@ -94,13 +97,13 @@ class SportsRecordMocker:
         dic_ids = self.__get_dic_ids(dic_data, dic_cgy_data, category_name)
         cot = len(dic_ids)
         dic_ids = np.random.choice(
-            dic_ids, random.randint(1, cot), replace=False)
+            dic_ids, random.randint(0, cot), replace=False)
 
         return ','.join(dic_ids)
 
     def __mock_sports_record_item(self, dic_data, dic_cgy_data,):
         se = random_start_end_time(datetime.datetime(
-            2019, 1, 1), datetime.datetime(2019, 6, 1))
+            2019, 1, 1), datetime.datetime(2019, 6, 1), datetime.timedelta(days=1))
 
         return {
             'start_time': se[0],
@@ -119,49 +122,45 @@ class SportsRecordMocker:
                 dic_data = list(Dictionary.select())
                 dic_cgy_data = list(DictionaryCategory.select())
 
-                for i in range(10):
+                for i in range(1):
                     sports_record_datas = [
                         self.__mock_sports_record_item(dic_data, dic_cgy_data) for j in range(1000)]
-                    # print(sports_record_datas)
+                    # logger.info(sports_record_datas)
                     SportsRecord.insert_many(sports_record_datas).execute()
-                    print('insert {} item to sports_record.'.format(
+                    logger.info('insert {} item to sports_record.'.format(
                         len(sports_record_datas)))
 
-    def __dic_id_to_name(self, id, dic_data):
-        return Linq(dic_data).where(lambda x: x.id == int(id)).first().name
-        
     def __print_sports_record_item(self, item, dic_data, dic_cgy_data):
-        
+
         item.site = Linq(item.site.split(',')).select(
-            lambda x: self.__dic_id_to_name(x, dic_data)).to_list()
+            lambda x: get_id_by_name(dic_data, x)).to_list()
 
         item.equipment = Linq(item.equipment.split(',')).select(
-            lambda x: self.__dic_id_to_name(x, dic_data)).to_list()
+            lambda x: get_id_by_name(dic_data, x)).to_list()
 
         item.item = Linq(item.item.split(',')).select(
-            lambda x: self.__dic_id_to_name(x, dic_data)).to_list()
+            lambda x: get_id_by_name(dic_data, x)).to_list()
 
-        # print(model_to_dict(item))
+        # logger.info(model_to_dict(item))
         return model_to_dict(item)
 
-
-
-    def print_sports_record(self,size):
+    def print_sports_record(self, size):
         with db.execution_context():
             dic_data = list(Dictionary.select())
             dic_cgy_data = list(DictionaryCategory.select())
             record_data = SportsRecord.select().limit(size)
             # df = pd.DataFrame(list(record_data.dicts()))
-            dics=[self.__print_sports_record_item(
+            dics = [self.__print_sports_record_item(
                 itr, dic_data, dic_cgy_data) for itr in record_data]
-            df = pd.DataFrame(dics)          
+            df = pd.DataFrame(dics)
             df = split_data_frame_list(df, 'site')
             df = split_data_frame_list(df, 'equipment')
             df = split_data_frame_list(df, 'item')
-            print(df)
+            print(df.head())
 
-srm=SportsRecordMocker()
-# srm.init_table()
+
+srm = SportsRecordMocker()
+srm.init_table()
 srm.mock_dic_cgy()
 srm.mock_dic()
 srm.mock_person()
@@ -169,6 +168,3 @@ srm.mock_sports_record()
 srm.print_sports_record(10)
 if not db.is_closed():
     db.close()
-    
-
-

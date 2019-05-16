@@ -10,5 +10,5 @@
 - peewee python 下的轻量级 ORM 框架
 
 ### 数据库
- 
-目前使用的是`Postgres`数据库,配置文件位于`Datas.Po`
+
+目前使用的是`peewee`映射到数据库数据库，已跟数据库解耦。配置文件位于`Datas.DataBaseConf`模块里。测试postgres和mysql均可用。
