@@ -23,21 +23,20 @@ def random_start_end_time(start, end, max_timedelta=None):
     return [t1, t2]
 
 
-
 def month_max_days(dt):
     return calendar.monthrange(dt.year, dt.month)[1]
 
 
-def split_start_end_time_to_list(start, end, fmt):
-    '''fmt is one of ['Y', 'M', 'D', 'W', 'H'],
+def split_start_end_time_to_list(start, end, freq):
+    '''freq is one of ['Y', 'M', 'D', 'W', 'H'],
     start , end is datetime'''
-    if 'Y' == fmt:
-        return [i.to_pydatetime().year for i in pd.date_range(start, end + relativedelta(years=1), freq='Y')]
-    elif 'M' == fmt:
-        return [i.to_pydatetime().month for i in pd.date_range(start, end + relativedelta(months=1), freq='M')]
-    elif 'D' == fmt:
-        return [i.to_pydatetime().day for i in pd.date_range(start, end, freq='D')]
-    elif 'W' == fmt:
+    if freq.endswith('Y'):
+        return [i.to_pydatetime().year for i in pd.date_range(start, end + relativedelta(years=1), freq=freq)]
+    elif freq.endswith('M'):
+        return [i.to_pydatetime().month for i in pd.date_range(start, end + relativedelta(months=1), freq=freq)]
+    elif freq.endswith('D'):
+        return [i.to_pydatetime().day for i in pd.date_range(start, end, freq=freq)]
+    elif freq.endswith('W'):
         return [i.to_pydatetime().weekday() for i in pd.date_range(start, end, freq='D')]
-    elif 'H' == fmt:
-        return [i.to_pydatetime().hour for i in pd.date_range(start, end, freq='H')]
+    elif freq.endswith('H'):
+        return [i.to_pydatetime().hour for i in pd.date_range(start, end, freq=freq)]

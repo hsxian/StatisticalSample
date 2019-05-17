@@ -131,18 +131,5 @@ class SportsRecordMocker:
                         len(sports_record_datas)))
 
 
-    def print_sports_record(self, size):
-        with db.execution_context():
-            dic_data = pw_lst_2_py_dic(list(Dictionary.select()))
-            record_data = SportsRecord.select().limit(size)
-            df = pd.DataFrame(list(record_data.dicts()))       
-            df_csv_to_lst(df, ['site', 'equipment', 'item'])
-            df = split_data_frame_list(df, 'site')
-            df = split_data_frame_list(df, 'equipment')
-            df = split_data_frame_list(df, 'item')
-            df_cols_id_2_name(df, ['site', 'equipment', 'item'], dic_data)
-            print(df.head())
-
-
 if not db.is_closed():
     db.close()
