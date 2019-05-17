@@ -5,8 +5,8 @@ import os
 
 sys.path.append(os.getcwd())  # 将整个项目加入解析器的搜索目录
 
-from Utils.Linq import Linq
-from Conf.DataBaseConf import db
+from statistical.utils.linq import Linq
+from statistical.conf.database_conf import db
 
 class Person(Model):
     id = PrimaryKeyField()
@@ -44,12 +44,6 @@ class SportsRecord(Model):
 
     class Meta:
         database = db
-
-
-def model_to_dict_not_id(obj):
-    dic = model_to_dict(obj)
-    del dic['id']
-    return dic
 
 
 if not db.is_closed():
