@@ -9,11 +9,11 @@ sys.path.append(os.getcwd())  # 将整个项目加入解析器的搜索目录
 
 from statistical.conf.logger_conf import logger
 from statistical.utils.pandas_util import split_data_frame_list
-from statistical.conf.database_conf import db
-from statistical.db.models.sports import *
 from statistical.utils.time_util import random_start_end_time
+from statistical.conf.database_conf import db
+from statistical.db.models.sports import Person, DictionaryCategory, Dictionary, SportsRecord
 from statistical.utils.linq import Linq
-from statistical.db.utils import *
+from statistical.db.utils import df_csv_to_lst
 
 class SportsRecordMocker:
 

@@ -1,4 +1,4 @@
-from peewee import *
+from peewee import PostgresqlDatabase
 
 db = PostgresqlDatabase(
     'testdb',

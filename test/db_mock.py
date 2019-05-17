@@ -1,20 +1,16 @@
-from statistical.db.mock.sports_record import SportsRecordMocker
-from statistical.conf.logger_conf import logger
-from statistical.utils.pandas_util import split_data_frame_list
-from statistical.conf.database_conf import db
-from statistical.db.models.sports import *
-from statistical.utils.time_util import *
-from statistical.utils.linq import Linq
-from statistical.db.utils import *
-import os
 import sys
-import numpy as np
-import datetime
-import random
 import pandas as pd
+import os
 
 sys.path.append(os.getcwd())  # 将整个项目加入解析器的搜索目录
 
+from statistical.db.mock.sports_record import SportsRecordMocker
+from statistical.utils.pandas_util import split_data_frame_list
+from statistical.conf.database_conf import db
+from statistical.db.models.sports import SportsRecord
+from statistical.utils.time_util import split_start_end_time_to_list
+from statistical.db.utils import  df_csv_to_lst, df_cols_id_2_name
+from statistical.db.access.sports_data import SportsDao
 
 def mock_data():
     with db.execution_context():
@@ -28,7 +24,7 @@ def mock_data():
 
 def print_sports_record(size):
     with db.execution_context():
-        dic_data = pw_lst_2_py_dic(list(Dictionary.select()))
+        dic_data = SportsDao().sports_dict
         record_data = SportsRecord.select().limit(size)
         df = pd.DataFrame(list(record_data.dicts()))
         # print(df)

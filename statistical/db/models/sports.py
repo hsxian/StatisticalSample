@@ -1,4 +1,4 @@
-from peewee import *
+from peewee import Model, PrimaryKeyField, CharField, IntegerField, ForeignKeyField, TextField, DateTimeField
 from playhouse.shortcuts import dict_to_model, model_to_dict
 import sys
 import os
