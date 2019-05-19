@@ -2,18 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4cb38ceb-4547-41e8-944d-4433f0c7eae5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/statistical/core/statistician.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/statistician.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/statistical/conf/database_conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/statistical/conf/database_conf.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/statistical/conf/logger_conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/statistical/conf/logger_conf.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/statistical/core/Statistician.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statistical/core/models/statistical_request.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/statistical/db/access/sports_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/statistical/db/access/sports_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/statistical/db/mock/sports_record.py" beforeDir="false" afterPath="$PROJECT_DIR$/statistical/db/mock/sports_record.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/statistical/utils/time_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/statistical/utils/time_util.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/db_mock.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/db_mock.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/time_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/time_util.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/statistical/core/statistician.py" beforeDir="false" afterPath="$PROJECT_DIR$/statistical/core/statistician.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,13 +16,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/statistical/core/statistician.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="88" column="19" lean-forward="true" selection-start-line="88" selection-start-column="19" selection-end-line="88" selection-end-column="19" />
+            <state relative-caret-position="3542">
+              <caret line="161" column="40" selection-start-line="161" selection-start-column="40" selection-end-line="161" selection-end-column="40" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/statistician.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="191">
+              <caret line="25" column="8" selection-start-line="25" selection-start-column="8" selection-end-line="25" selection-end-column="8" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -47,6 +52,8 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>c_Statis</find>
+      <find>sports_dict</find>
+      <find>__to_list</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -69,14 +76,14 @@
         <option value="$PROJECT_DIR$/statistical/utils/time_util.py" />
         <option value="$PROJECT_DIR$/test/db_mock.py" />
         <option value="$PROJECT_DIR$/statistical/core/statistician.py" />
+        <option value="$PROJECT_DIR$/test/statistician.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2091" />
-    <option name="y" value="20" />
-    <option name="width" value="1400" />
-    <option name="height" value="1000" />
+    <option name="x" value="530" />
+    <option name="width" value="1390" />
+    <option name="height" value="996" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -86,7 +93,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Course" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -110,6 +116,13 @@
               <item name="statistical_core" type="462c0819:PsiDirectoryNode" />
               <item name="statistical" type="462c0819:PsiDirectoryNode" />
               <item name="core" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="statistical_core" type="b2602c69:ProjectViewProjectNode" />
+              <item name="statistical_core" type="462c0819:PsiDirectoryNode" />
+              <item name="statistical" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+              <item name="logs" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="statistical_core" type="b2602c69:ProjectViewProjectNode" />
@@ -141,6 +154,12 @@
             <path>
               <item name="statistical_core" type="b2602c69:ProjectViewProjectNode" />
               <item name="statistical_core" type="462c0819:PsiDirectoryNode" />
+              <item name="statistical" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="statistical_core" type="b2602c69:ProjectViewProjectNode" />
+              <item name="statistical_core" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -156,6 +175,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Course" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -175,7 +195,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.statistician">
+  <component name="RunManager" selected="Python.statistician (1)">
     <configuration name="db_mock" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="statistical_core" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -210,6 +230,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/statistical/db/access/sports_data.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="statistician (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="statistical_core" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/statistician.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -262,6 +303,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.statistician (1)" />
         <item itemvalue="Python.statistician" />
         <item itemvalue="Python.time_util" />
         <item itemvalue="Python.db_mock" />
@@ -273,7 +315,7 @@
     <configuration />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1920" y="20" width="1920" height="1060" extended-state="6" />
+    <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18133895" />
@@ -281,7 +323,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32928178" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32917964" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3997923" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3916582" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -350,9 +392,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/statistical/core/Statistician.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/statistical/core/Statistician.py" />
     <entry file="file:///usr/lib/python3.6/json/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-917">
@@ -420,13 +460,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib/python3/dist-packages/peewee.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="402" selection-start-line="402" selection-end-line="402" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/statistical/db/mock/sports_record.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="197">
@@ -478,13 +511,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib/python3/dist-packages/pandas/core/generic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="3613" selection-start-line="3613" selection-end-line="3613" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/lib/python3/dist-packages/pandas/core/indexes/multi.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="182">
@@ -506,22 +532,76 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/statistical/core/logs/2019-05-19.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-340" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/test/db_mock.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="29" column="22" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
+        <state relative-caret-position="176">
+          <caret line="8" column="48" selection-start-line="8" selection-start-column="48" selection-end-line="8" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/statistical/db/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="9" column="4" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/statistical/utils/pandas_util.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="17" column="37" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib/python3/dist-packages/pandas/core/frame.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="2217" selection-start-line="2217" selection-end-line="2217" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib/python3/dist-packages/pandas/core/categorical.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="1964" selection-start-line="1964" selection-end-line="1964" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib/python3/dist-packages/peewee.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="4407" selection-start-line="4407" selection-end-line="4407" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/lib/python3/dist-packages/pandas/core/generic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="314">
+          <caret line="3609" selection-start-line="3609" selection-end-line="3609" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/statistical/core/statistician.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3542">
+          <caret line="161" column="40" selection-start-line="161" selection-start-column="40" selection-end-line="161" selection-end-column="40" />
           <folding>
             <element signature="e#0#15#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/statistical/core/statistician.py">
+    <entry file="file://$PROJECT_DIR$/test/statistician.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="88" column="19" lean-forward="true" selection-start-line="88" selection-start-column="19" selection-end-line="88" selection-end-column="19" />
+        <state relative-caret-position="191">
+          <caret line="25" column="8" selection-start-line="25" selection-start-column="8" selection-end-line="25" selection-end-column="8" />
           <folding>
-            <element signature="e#0#15#0" expanded="true" />
+            <element signature="e#0#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
