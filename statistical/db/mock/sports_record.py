@@ -1,22 +1,17 @@
-import os
-import sys
 import numpy as np
 import datetime
 import random
-import pandas as pd
 
-sys.path.append(os.getcwd())  # 将整个项目加入解析器的搜索目录
+import numpy as np
 
-from statistical.conf.logger_conf import logger
-from statistical.utils.pandas_util import split_data_frame_list
-from statistical.utils.time_util import random_start_end_time
 from statistical.conf.database_conf import db
+from statistical.conf.logger_conf import logger
 from statistical.db.models.sports import Person, DictionaryCategory, Dictionary, SportsRecord
 from statistical.utils.linq import Linq
-from statistical.db.utils import df_csv_to_lst
+from statistical.utils.time_util import random_start_end_time
+
 
 class SportsRecordMocker:
-
     dic_cgy_datas = [
         {'name': 'site'},  # 场地
         {'name': 'equipment'},  # 设备
@@ -89,11 +84,11 @@ class SportsRecordMocker:
             lambda x: x.name == category_name).id
 
         dic_ids = Linq(dic_data).where(lambda x: x.category.id ==
-                                        dic_cay_id).select(lambda x: str(x.id)).to_list()
+                                                 dic_cay_id).select(lambda x: str(x.id)).to_list()
 
         return dic_ids
 
-    def __random_dic_ids(self, dic_data, dic_cgy_data,  category_name):
+    def __random_dic_ids(self, dic_data, dic_cgy_data, category_name):
         dic_ids = self.__get_dic_ids(dic_data, dic_cgy_data, category_name)
         cot = len(dic_ids)
         dic_ids = np.random.choice(
@@ -101,7 +96,7 @@ class SportsRecordMocker:
 
         return ','.join(dic_ids)
 
-    def __mock_sports_record_item(self, dic_data, dic_cgy_data,start_time,end_tiem,):
+    def __mock_sports_record_item(self, dic_data, dic_cgy_data, start_time, end_tiem, ):
         se = random_start_end_time(start_time, end_tiem, datetime.timedelta(days=1))
 
         return {
@@ -113,17 +108,18 @@ class SportsRecordMocker:
             'person': random.randint(1, Person.select().count()),
         }
 
-    def mock_sports_record(self,start_time,end_tiem, size):
+    def mock_sports_record(self, start_time, end_tiem, size):
         with db.atomic():
             cot = SportsRecord.select().count()
             if cot == 0:
-                count = int(size/1000)
+                count = int(size / 1000)
                 dic_data = list(Dictionary.select())
                 dic_cgy_data = list(DictionaryCategory.select())
 
                 for i in range(count):
                     sports_record_datas = [
-                        self.__mock_sports_record_item(dic_data, dic_cgy_data,start_time,end_tiem) for j in range(1000)]
+                        self.__mock_sports_record_item(dic_data, dic_cgy_data, start_time, end_tiem) for j in
+                        range(1000)]
                     # logger.info(sports_record_datas)
                     SportsRecord.insert_many(sports_record_datas).execute()
                     logger.info('insert {} item to sports_record.'.format(

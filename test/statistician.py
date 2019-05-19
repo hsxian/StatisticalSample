@@ -8,7 +8,6 @@ from statistical.core.statistician import SportsRecordStatistician, Timeparamete
 
 def tatistician_test():
     with db.execution_context():
-
         indexs = None
 
         columns = 'item'
@@ -23,7 +22,7 @@ def tatistician_test():
             'equipment': ['bicycle'],
             'item': ['swim', 'riding', 'gaming']
         }
-        
+
         srs = SportsRecordStatistician()
         data = srs.get_sports_records(
             indexs=indexs,

@@ -1,7 +1,6 @@
 import calendar
 import random
 import re
-from datetime import datetime
 
 import pandas as pd
 from dateutil.relativedelta import relativedelta
@@ -28,10 +27,10 @@ def month_max_days(dt):
     return calendar.monthrange(dt.year, dt.month)[1]
 
 
-def segmentation_cut_list(freq,start,end):
-    step=1
-    re_ex=r'\d+\.?\d*'
-    if re.match(re_ex,freq):
+def segmentation_cut_list(freq, start, end):
+    step = 1
+    re_ex = r'\d+\.?\d*'
+    if re.match(re_ex, freq):
         step = int(re.findall(r"\d+\.?\d*", freq)[0])
     result = []
     if freq.endswith('Y'):
