@@ -1,9 +1,10 @@
-from dateutil.relativedelta import relativedelta
-import numpy as np
-import pandas as pd
 import calendar
-import datetime
 import random
+import re
+from datetime import datetime
+
+import pandas as pd
+from dateutil.relativedelta import relativedelta
 
 
 def randomtimes(start, end, n):
@@ -17,7 +18,7 @@ def randomtime(start, end):
 def random_start_end_time(start, end, max_timedelta=None):
     t1 = randomtime(start, end)
     if max_timedelta:
-        t2 = randomtime(t1, t1+max_timedelta)
+        t2 = randomtime(t1, t1 + max_timedelta)
     else:
         t2 = randomtime(t1, end)
     return [t1, t2]
@@ -25,6 +26,29 @@ def random_start_end_time(start, end, max_timedelta=None):
 
 def month_max_days(dt):
     return calendar.monthrange(dt.year, dt.month)[1]
+
+
+def segmentation_cut_list(freq,start,end):
+    step=1
+    re_ex=r'\d+\.?\d*'
+    if re.match(re_ex,freq):
+        step = int(re.findall(r"\d+\.?\d*", freq)[0])
+    result = []
+    if freq.endswith('Y'):
+        [result.append(i) for i in range(start.year, end.year, step)]
+        result.append(end.year)
+    elif freq.endswith('M'):
+        [result.append(i) for i in range(0, 12, step)]
+        result.append(12)
+    elif freq.endswith('D'):
+        [result.append(i) for i in range(0, 31, step)]
+        result.append(31)
+    elif freq.endswith('W'):
+        [result.append(i) for i in range(0, 7)]
+    elif freq.endswith('H'):
+        [result.append(i) for i in range(0, 24, step)]
+        result.append(24)
+    return result
 
 
 def split_start_end_time_to_list(start, end, freq):
@@ -40,3 +64,5 @@ def split_start_end_time_to_list(start, end, freq):
         return [i.to_pydatetime().weekday() for i in pd.date_range(start, end, freq='D')]
     elif freq.endswith('H'):
         return [i.to_pydatetime().hour for i in pd.date_range(start, end, freq=freq)]
+
+# print(segmentation_cut_list('9H',datetime(2018,1,1),datetime(2020,1,1)))

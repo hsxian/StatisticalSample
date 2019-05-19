@@ -1,5 +1,6 @@
 import logging
-from logging.handlers import HTTPHandler
+import os
+# from logging.handlers import HTTPHandler
 import sys
 import datetime
 
@@ -16,7 +17,11 @@ stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 
 # FileHandler
-file_handler = logging.FileHandler('{:%Y-%m-%d}.log'.format(datetime.datetime.now()))
+log_dir='logs'
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+file_handler = logging.FileHandler('{}/{:%Y-%m-%d}.log'.format(log_dir,datetime.datetime.now()))
 file_handler.setLevel(level=logging.INFO)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)

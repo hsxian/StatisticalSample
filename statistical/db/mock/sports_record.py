@@ -101,9 +101,8 @@ class SportsRecordMocker:
 
         return ','.join(dic_ids)
 
-    def __mock_sports_record_item(self, dic_data, dic_cgy_data,):
-        se = random_start_end_time(datetime.datetime(
-            2019, 1, 1), datetime.datetime(2019, 6, 1), datetime.timedelta(days=1))
+    def __mock_sports_record_item(self, dic_data, dic_cgy_data,start_time,end_tiem,):
+        se = random_start_end_time(start_time, end_tiem, datetime.timedelta(days=1))
 
         return {
             'start_time': se[0],
@@ -114,7 +113,7 @@ class SportsRecordMocker:
             'person': random.randint(1, Person.select().count()),
         }
 
-    def mock_sports_record(self, size):
+    def mock_sports_record(self,start_time,end_tiem, size):
         with db.atomic():
             cot = SportsRecord.select().count()
             if cot == 0:
@@ -124,7 +123,7 @@ class SportsRecordMocker:
 
                 for i in range(count):
                     sports_record_datas = [
-                        self.__mock_sports_record_item(dic_data, dic_cgy_data) for j in range(1000)]
+                        self.__mock_sports_record_item(dic_data, dic_cgy_data,start_time,end_tiem) for j in range(1000)]
                     # logger.info(sports_record_datas)
                     SportsRecord.insert_many(sports_record_datas).execute()
                     logger.info('insert {} item to sports_record.'.format(

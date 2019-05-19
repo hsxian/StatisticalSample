@@ -1,8 +1,4 @@
 import datetime
-import sys
-import os
-
-sys.path.append(os.getcwd())  # 将整个项目加入解析器的搜索目录
 
 from statistical.utils.time_util import split_start_end_time_to_list
 
