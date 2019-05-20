@@ -11,7 +11,7 @@ class SportsDao():
     def sports_dict(self):
         dic = cache.get('sports_dict')
         if not dic:
-            logger.info('read sport dict data.')
+            print('read sport dict data.')
             with db.execution_context():
                 data = list(Dictionary.select(Dictionary.id, Dictionary.name))
                 dic = pw_lst_2_py_dic(data)
@@ -22,7 +22,7 @@ class SportsDao():
     def sports_cgy_dict(self):
         dic = cache.get('sports_cgy_dict')
         if not dic:
-            logger.info('read sport category dict data.')
+            print('read sport category dict data.')
             with db.execution_context():
                 data = list(DictionaryCategory.select(DictionaryCategory.id, DictionaryCategory.name))
                 dic = pw_lst_2_py_dic(data)

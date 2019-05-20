@@ -37,3 +37,4 @@ def test():
         'b1', 'b2', 'b3'], ['c1', 'c2', 'c3'], []], 'leave me': range(4)})
 
     print(split_data_frame_list(df, 'items'))
+

@@ -1,7 +1,5 @@
 from datetime import datetime
-
 import pandas
-
 from statistical.conf.database_conf import db
 from statistical.core.statistician import SportsRecordStatistician, Timeparameter
 
@@ -16,13 +14,12 @@ def tatistician_test():
         time.segmentation = 'H'
         # time.as_index=False
         time.start = datetime(2019, 1, 1)
-        time.end = datetime(2019, 1, 1, 1, 30)
+        time.end = datetime(2019, 6, 1, 0, 30)
 
         filter_dic = {
-            'equipment': ['bicycle'],
-            'item': ['swim', 'riding', 'gaming']
+            'equipment': ['bicycle'],#7
+            'item': ['swim', 'riding', 'gaming']#10,11,12
         }
-
         srs = SportsRecordStatistician()
         data = srs.get_sports_records(
             indexs=indexs,
@@ -31,7 +28,8 @@ def tatistician_test():
             filter_dic=filter_dic
         )
 
-        print(pandas.DataFrame(data))
+        print('data count:', len(data))
+        # print(pandas.DataFrame(data))
 
         df = SportsRecordStatistician().sports_record_statistics(
             sports_records=data,
@@ -43,4 +41,6 @@ def tatistician_test():
         print(df)
 
 
+now = datetime.now()
 tatistician_test()
+print('-+' * 20, 'tatistician_test', datetime.now() - now)

@@ -34,7 +34,11 @@ time
 - 时间过滤
 - csv 过滤
 
-## 开发依赖
+## 开发
+
+### 示例
+
+当前示例可以在`test`中找到，具体模块位于`test.statisticin.py`中。
 
 ### 软件依赖
 
@@ -46,7 +50,7 @@ time
 
 ### 数据库
 
-目前使用的是`peewee`映射到数据库数据库，已跟数据库解耦。配置文件位于`statistical.conf.database_conf`模块里。测试 postgres 、mysql 和 sqlite 均可用。目前好像不支持 oracle，不过，作为示例，这已经够了。
+目前使用的是`peewee`映射到数据库数据库。配置文件位于`statistical.conf.database_conf.py`模块里。测试 postgres 、mysql 和 sqlite 均可用。目前好像不支持 oracle，不过，作为示例，这已经足够了。
 
 ## roadmap
 
@@ -55,3 +59,34 @@ time
 - 统计数据过滤（完成）
 - 统计性能优化（持续进行中）
 - Spark 使用（敬请期待）
+
+## performance
+
+测试机器：
+
+- model name : Intel(R) Core(TM) i5 CPU @ 2.60GHz
+- cache size : 3072 KB
+- siblings : 4
+
+测试数据量：
+
+- 100_000 条随机数据
+- 单机docker的postgres数据库中
+
+测试条件：
+
+- 时间条件：Timeparameter().segmentation = 'H'
+- 过滤条件：
+
+  ```python
+  filter_dic = {
+             'equipment': ['bicycle'],#7
+             'item': ['swim', 'riding', 'gaming']#10,11,12
+         }
+  ```
+
+测试结果：
+
+1. 单线程约 60s
+2. 2 个进程 30s（速度并没有随进程数增加，虽然 cpu 会占满）
+3. 运行时间跟统计条件输入有很大的关系。比如不统计时间维度（`Timeparameter().segmentation = ''`），那么时间将到达秒级
