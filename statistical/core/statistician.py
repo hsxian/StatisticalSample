@@ -1,6 +1,6 @@
-import datetime
 from concurrent.futures import ProcessPoolExecutor
 # from multiprocessing.dummy import  Pool#线程
+from datetime import datetime
 from multiprocessing import Pool  # 进程
 from multiprocessing import cpu_count
 
@@ -12,12 +12,13 @@ from statistical.db.access.sports_data import SportsDao
 from statistical.db.models.sports import SportsRecord
 from statistical.db.utils import df_csv_to_lst
 from statistical.utils.pandas_util import split_data_frame_list
+from statistical.utils.stopwatch import StopWatch
 from statistical.utils.time_util import split_start_end_time_to_list, segmentation_cut_list
 
 
-class Timeparameter(object):
-    start = datetime.datetime.now() - relativedelta(months=1)
-    end = datetime.datetime.now()
+class TimeParameter(object):
+    start = datetime.now() - relativedelta(months=1)
+    end = datetime.now()
     segmentation = '3H'
     time_name = 'time'
     as_index = True
@@ -45,8 +46,8 @@ class SportsRecordStatistician(object):
         columns = self.__to_list(columns)
         sports_dic = SportsDao().sports_dict
 
-        # cpu_ct = cpu_count()
-        cpu_ct = 2
+        cpu_ct = cpu_count()
+        # cpu_ct = 2
         p = Pool(cpu_ct)  # 创建4个进程
         data_ct = len(sports_records)
         per_ct = int(data_ct / cpu_ct)
@@ -187,18 +188,26 @@ class SportsRecordStatistician(object):
             df = df.assign(start_time=np.maximum(df.start_time, np.datetime64(time_parm.start)),
                            end_time=np.minimum(df.end_time, np.datetime64(time_parm.end)))
 
+            split_time_func = split_start_end_time_to_list(time_parm.segmentation)
+
             for index, row in df.iterrows():
-                time_rows.append(split_start_end_time_to_list(
+                time_rows.append(split_time_func(
                     row['start_time'],
                     row['end_time'],
                     time_parm.segmentation))
 
             df[time_parm.time_name] = time_rows
             df = df.drop(columns=['start_time', 'end_time'])
-            split_items.append(time_parm.time_name)
+            df = split_data_frame_list(df, time_parm.time_name)
+            # split_items.append(time_parm.time_name)
 
-        for item in split_items:
-            df = split_data_frame_list(df, item)
+        df1 = df.drop(columns=split_items, axis=1)
+        for x in split_items:
+            df1 = df1.join(df[x].str.split(',', expand=True).stack().reset_index(level=1, drop=True).rename(x))
+        df = df1.reset_index(drop=True)
+
+        # for item in [time_parm.time_name]:
+        #     df = split_data_frame_list(df, item)
         return df
 
     def __get_time_cut(self, df, time_parm):
@@ -211,31 +220,37 @@ class SportsRecordStatistician(object):
     def process_data(self, sports_records, indexs, columns, time_parm, sports_dic, filter_dic=None):
         if not sports_records:
             return
-        # now = datetime.datetime.now()
+
+        sth = StopWatch()
+        sth.start()
+
         filter_dic_id = filter_dic
         if filter_dic:
             filter_dic_id = self.__transfer_filter_dic(filter_dic, sports_dic)
 
         df = pd.DataFrame(sports_records)
 
-        # print('-+' * 20,'DataFrame',datetime.datetime.now()-now)
-        # now = datetime.datetime.now()
+        print('DataFrame:', sth.elapsed, '-+' * 20)
         # print(df)
 
-        self.__transfer_csv_to_list(df, indexs, columns, filter_dic_id)
-        # print('-+' * 20, 'transfer_csv_to_list')
+        # self.__transfer_csv_to_list(df, indexs, columns, filter_dic_id)
+        # print('__transfer_csv_to_list:', sth.elapsed, '-+' * 20)
+        # sth.start()
         # print(df)
 
         df = self.__filter_not_pivot_rows(df, indexs, columns, filter_dic_id)
-        # print('-+' * 20, 'filter_not_pivot_rows')
+        print('__filter_not_pivot_rows:', sth.elapsed, '-+' * 20)
+        sth.start()
         # print(df)
 
         df = self.__split_pivot_rows(df, indexs, columns, time_parm)
-        # print('-+' * 20, 'split_pivot_rows')
+        print('__split_pivot_rows:', sth.elapsed, '-+' * 20)
+        sth.start()
         # print(df)
 
         df = self.__filter_pivot_rows(df, indexs, columns, filter_dic_id)
-        # print('-+' * 20, 'filter_pivot_rows')
+        print('__filter_pivot_rows:', sth.elapsed, '-+' * 20)
+        sth.start()
         # print(df)
 
         return df

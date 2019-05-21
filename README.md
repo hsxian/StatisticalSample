@@ -75,7 +75,7 @@ time
 
 测试条件：
 
-- 时间条件：Timeparameter().segmentation = 'H'
+- 时间条件：TimeParameter().segmentation = 'H'
 - 过滤条件：
 
   ```python
@@ -87,6 +87,8 @@ time
 
 测试结果：
 
+2019-5-20：
+
 1. 单线程约 60s
-2. 2 个进程 30s（速度并没有随进程数增加，虽然 cpu 会占满）
-3. 运行时间跟统计条件输入有很大的关系。比如不统计时间维度（`Timeparameter().segmentation = ''`），那么时间将到达秒级
+2. 2 个进程 30s（速度并没有随进程数显著增加，虽然 cpu 会占满，4进程24s左右）
+3. 运行时间跟统计条件输入有很大的关系。比如不统计时间维度（`TimeParameter().segmentation = ''`），那么时间将到达秒级

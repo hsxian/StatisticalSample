@@ -1,4 +1,4 @@
-from peewee import PostgresqlDatabase
+from peewee import PostgresqlDatabase, MySQLDatabase, SqliteDatabase
 
 
 def postgres():
@@ -21,7 +21,6 @@ def mysql():
 
 def sqlite():
     return SqliteDatabase('testdb.db')
-
 
 
 db = postgres()

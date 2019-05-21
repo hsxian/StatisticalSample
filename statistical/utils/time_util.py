@@ -50,18 +50,57 @@ def segmentation_cut_list(freq, start, end):
     return result
 
 
-def split_start_end_time_to_list(start, end, freq):
+def __split_start_end_time_to_list_year(start, end, freq):
+    return [i.to_pydatetime().year for i in pd.date_range(start, end + relativedelta(years=1), freq=freq)]
+
+
+def __split_start_end_time_to_list_month(start, end, freq):
+    return [i.to_pydatetime().month for i in pd.date_range(start, end + relativedelta(months=1), freq=freq)]
+
+
+def __split_start_end_time_to_list_day(start, end, freq):
+    return [i.to_pydatetime().day for i in pd.date_range(start, end, freq=freq)]
+
+
+def __split_start_end_time_to_list_week(start, end, freq):
+    return [i.to_pydatetime().weekday() for i in pd.date_range(start, end, freq='D')]
+
+
+def __split_start_end_time_to_list_hour(start, end, freq):
+    return [i.to_pydatetime().hour for i in pd.date_range(start, end, freq=freq)]
+
+
+def split_start_end_time_to_list(freq):
     '''freq is one of ['Y', 'M', 'D', 'W', 'H'],
     start , end is datetime'''
     if freq.endswith('Y'):
-        return [i.to_pydatetime().year for i in pd.date_range(start, end + relativedelta(years=1), freq=freq)]
+        return __split_start_end_time_to_list_year
     elif freq.endswith('M'):
-        return [i.to_pydatetime().month for i in pd.date_range(start, end + relativedelta(months=1), freq=freq)]
+        return __split_start_end_time_to_list_month
     elif freq.endswith('D'):
-        return [i.to_pydatetime().day for i in pd.date_range(start, end, freq=freq)]
+        return __split_start_end_time_to_list_day
     elif freq.endswith('W'):
-        return [i.to_pydatetime().weekday() for i in pd.date_range(start, end, freq='D')]
+        return __split_start_end_time_to_list_week
     elif freq.endswith('H'):
-        return [i.to_pydatetime().hour for i in pd.date_range(start, end, freq=freq)]
+        return __split_start_end_time_to_list_hour
+
+
+# def split_start_end_time_to_list(start, end, freq):
+#     '''freq is one of ['Y', 'M', 'D', 'W', 'H'],
+#     start , end is datetime'''
+#     if freq.endswith('Y'):
+#         return [i.to_pydatetime().year for i in pd.date_range(start, end + relativedelta(years=1), freq=freq)]
+#     elif freq.endswith('M'):
+#         return [i.to_pydatetime().month for i in pd.date_range(start, end + relativedelta(months=1), freq=freq)]
+#     elif freq.endswith('D'):
+#         return [i.to_pydatetime().day for i in pd.date_range(start, end, freq=freq)]
+#     elif freq.endswith('W'):
+#         return [i.to_pydatetime().weekday() for i in pd.date_range(start, end, freq='D')]
+#     elif freq.endswith('H'):
+#         return [i.to_pydatetime().hour for i in pd.date_range(start, end, freq=freq)]
 
 # print(segmentation_cut_list('9H',datetime(2018,1,1),datetime(2020,1,1)))
+# strrr = ''
+# for i in pd.date_range('2019-01-01 00:20:24.008143', '2019-01-02 00:30:00', freq='H'):
+#     strrr += '%s,' % (i.to_pydatetime().hour)
+# print(strrr, strrr[:-1].split(','))
