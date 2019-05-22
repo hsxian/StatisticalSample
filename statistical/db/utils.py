@@ -20,3 +20,12 @@ def __id_2_name(dic, id):
 def df_cols_id_2_name(df, cols, dic):
     for col in cols:
         df[col] = df[col].apply(lambda x: __id_2_name(dic, x))
+
+
+def str_to_list(item):
+    result = []
+    if isinstance(item, str):
+        result.append(item)
+    elif isinstance(item, list):
+        result.extend(item)
+    return result

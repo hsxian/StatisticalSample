@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 from statistical.db.access.sports_data import SportsDao
 from statistical.db.models.sports import SportsRecord
-from statistical.db.utils import df_csv_to_lst
+from statistical.db.utils import df_csv_to_lst, str_to_list
 from statistical.utils.pandas_util import split_data_frame_list
 from statistical.utils.stopwatch import StopWatch
 from statistical.utils.time_util import split_start_end_time_to_list, segmentation_cut_list
@@ -27,23 +27,19 @@ class TimeParameter(object):
 class SportsRecordStatistician(object):
 
     def get_sports_records(self, indexs, columns, time_parm, filter_dic=None):
-        indexs = self.__to_list(indexs)
-        columns = self.__to_list(columns)
+        indexs = str_to_list(indexs)
+        columns = str_to_list(columns)
 
         selection_names = self.__get_selection_names(
             indexs, columns, time_parm, filter_dic)
 
-        selections = self.__get_selections(selection_names)
-
-        sports_records = SportsRecord.select(*selections) \
-            .where(SportsRecord.start_time < time_parm.end) \
-            .where(SportsRecord.end_time > time_parm.start)
+        sports_records =SportsDao().get_sports_records(selection_names,time_parm.start,time_parm.end)
 
         return list(sports_records.dicts())
 
     def sports_record_statistics(self, sports_records, indexs, columns, time_parm, filter_dic=None):
-        indexs = self.__to_list(indexs)
-        columns = self.__to_list(columns)
+        indexs = str_to_list(indexs)
+        columns = str_to_list(columns)
         sports_dic = SportsDao().sports_dict
 
         cpu_ct = cpu_count()
@@ -73,8 +69,8 @@ class SportsRecordStatistician(object):
         return df
 
     def sports_record_statistics2(self, sports_records, indexs, columns, time_parm, filter_dic=None):
-        indexs = self.__to_list(indexs)
-        columns = self.__to_list(columns)
+        indexs = str_to_list(indexs)
+        columns = str_to_list(columns)
         sports_dic = SportsDao().sports_dict
 
         cpu_ct = cpu_count()
@@ -99,13 +95,7 @@ class SportsRecordStatistician(object):
 
         return df
 
-    def __to_list(self, items):
-        result = []
-        if isinstance(items, str):
-            result.append(items)
-        elif isinstance(items, list):
-            result.extend(items)
-        return result
+
 
     def __get_selection_names(self, indexs, columns, time_parm, filter_dic):
         selections = []
@@ -127,22 +117,6 @@ class SportsRecordStatistician(object):
         return result
         # return list(set(selections))  # distinct
 
-    def __get_class_pro(self, name):
-        if hasattr(SportsRecord, name):
-            return getattr(SportsRecord, name)
-
-    def __get_selections(self, selection_names):
-        querys = []
-        if isinstance(selection_names, str):
-            query = self.__get_class_pro(selection_names)
-            if query:
-                querys.append(query)
-        elif isinstance(selection_names, list):
-            for name in selection_names:
-                query = self.__get_class_pro(name)
-                if query:
-                    querys.append(query)
-        return querys
 
     def __transfer_filter_dic(self, filter_dic, sports_dic):
         result = {}
