@@ -1,14 +1,14 @@
 from datetime import datetime
 
-import pandas as pd
 from pyspark import SparkConf
 from pyspark import SparkContext
-from pyspark.sql.functions import split, explode, col
+from pyspark.sql import functions as F
 from pyspark.sql.session import SparkSession
 
 from statistical.core.statistician import TimeParameter
 from statistical.db.access.sports_data import SportsDao
 from statistical.db.utils import str_to_list
+from statistical.utils.stopwatch import StopWatch
 from statistical.utils.time_util import split_start_end_time_to_list
 
 
@@ -45,33 +45,41 @@ class StatisticianOnSpark(object):
         split_items = self.__get_selection_names(indexs, columns, None, None)
         if time_parm.segmentation:
             time_rows = []
-            # df = df.assign(start_time=np.maximum(df.start_time, np.datetime64(time_parm.start)),
-            #                end_time=np.minimum(df.end_time, np.datetime64(time_parm.end)))
-
+            sth = StopWatch()
+            sth.start()
+            df = df.withColumn('start_time', F.when(df.start_time < time_parm.start, time_parm.start).otherwise(df.start_time))
+            df = df.withColumn('end_time', F.when(df.end_time > time_parm.end, time_parm.end).otherwise(df.end_time))
             split_time_func = split_start_end_time_to_list(time_parm.segmentation)
 
-            for index, row in df.iterrows():
-                time_rows.append(split_time_func(
-                    row['start_time'],
-                    row['end_time'],
-                    time_parm.segmentation))
-
-
-        df1 = df.drop(columns=split_items, axis=1)
-        for x in split_items:
-            df1 = df1.join(df[x].str.split(',', expand=True).stack().reset_index(level=1, drop=True).rename(x))
-        df = df1.reset_index(drop=True)
+            print('.when(df.start_time',sth.elapsed)
+            # for row in df.collect():
+                # row=row.asDict()
+                # row['start_time']=max(row['start_time'],time_parm.start)
+                # row['end_time']=min(row['end_time'],time_parm.end)
+                # print(row)
+        #     for index, row in df.iterrows():
+        #         time_rows.append(split_time_func(
+        #             row['start_time'],
+        #             row['end_time'],
+        #             time_parm.segmentation))
+        #
+        #
+        # df1 = df.drop(columns=split_items, axis=1)
+        # for x in split_items:
+        #     df1 = df1.join(df[x].str.split(',', expand=True).stack().reset_index(level=1, drop=True).rename(x))
+        # df = df1.reset_index(drop=True)
 
         return df
+
     def sports_record_statistics(self, indexs, columns, time_parm, filter_dic=None):
         indexs = str_to_list(indexs)
         columns = str_to_list(columns)
 
         rdd = self.__get_sports_data_rdd(indexs, columns, time_parm, filter_dic)
         df = rdd.toDF()
-        df = df.withColumn("item", explode(split("item", ",")))
+        df = df.withColumn("item", F.explode(F.split("item", ",")))
         # df = df.withColumn("time", pd.date_range(col("start_time"), col("end_time")))
-
+        self.__split_pivot_rows(df, indexs, columns, time_parm)
         df.show()
 
     def __get_sports_data_rdd(self, indexs, columns, time_parm, filter_dic):
@@ -92,7 +100,7 @@ time = TimeParameter()
 time.segmentation = 'H'
 # time.as_index=False
 time.start = datetime(2019, 1, 1)
-time.end = datetime(2019, 1, 1, 0, 30)
+time.end = datetime(2019, 6, 1, 0, 30)
 
 filter_dic = {
     'equipment': ['bicycle'],  # 7
