@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from statistical.conf.database_conf import db
-from statistical.core.statistician import SportsRecordStatistician, TimeParameter
+from statistical.core.models.time_parameter import TimeParameter
+from statistical.core.statistician import SportsRecordStatistician
 
 
 def tatistician_test():

@@ -13,15 +13,6 @@ from statistical.db.utils import df_csv_to_lst, str_to_list
 from statistical.utils.stopwatch import StopWatch
 from statistical.utils.time_util import segmentation_cut_list, split_start_end_time_to_csv
 
-
-class TimeParameter(object):
-    start = datetime.now() - relativedelta(months=1)
-    end = datetime.now()
-    segmentation = '3H'
-    time_name = 'time'
-    as_index = True
-
-
 class SportsRecordStatistician(object):
 
     def get_sports_records(self, indexs, columns, time_parm, filter_dic=None):

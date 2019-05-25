@@ -154,3 +154,38 @@ def split_start_end_time_to_csv(freq):
         return __split_start_end_time_to_csv_week
     elif freq.endswith('H'):
         return __split_start_end_time_to_csv_hour
+
+
+def __split_start_end_time_to_range_list_year(start, end, freq, step):
+    return [int(i.to_pydatetime().year / step) for i in pd.date_range(start, end + relativedelta(years=1), freq=freq)]
+
+
+def __split_start_end_time_to_range_list_month(start, end, freq, step):
+    return [int(i.to_pydatetime().month / step) for i in pd.date_range(start, end + relativedelta(months=1), freq=freq)]
+
+
+def __split_start_end_time_to_range_list_day(start, end, freq, step):
+    return [int(i.to_pydatetime().day / step) for i in pd.date_range(start, end, freq=freq)]
+
+
+def __split_start_end_time_to_range_list_week(start, end, freq, step):
+    return [int(i.to_pydatetime().weekday() / step) for i in pd.date_range(start, end, freq='D')]
+
+
+def __split_start_end_time_to_range_list_hour(start, end, freq, step):
+    return [int(i.to_pydatetime().hour / step) for i in pd.date_range(start, end, freq=freq)]
+
+
+def split_start_end_time_to_range_list(freq):
+    '''freq is one of ['Y', 'M', 'D', 'W', 'H'],
+    start , end is datetime'''
+    if freq.endswith('Y'):
+        return __split_start_end_time_to_range_list_year
+    elif freq.endswith('M'):
+        return __split_start_end_time_to_range_list_month
+    elif freq.endswith('D'):
+        return __split_start_end_time_to_range_list_day
+    elif freq.endswith('W'):
+        return __split_start_end_time_to_range_list_week
+    elif freq.endswith('H'):
+        return __split_start_end_time_to_range_list_hour
