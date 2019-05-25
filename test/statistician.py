@@ -14,7 +14,7 @@ def tatistician_test():
         time.segmentation = 'H'
         # time.as_index=False
         time.start = datetime(2019, 1, 1)
-        time.end = datetime(2019, 2, 1, 0, 30)
+        time.end = datetime(2019, 6, 1, 0, 30)
 
         filter_dic = {
             'equipment': ['bicycle'],  # 7

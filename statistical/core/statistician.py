@@ -9,11 +9,9 @@ import pandas as pd
 from dateutil.relativedelta import relativedelta
 
 from statistical.db.access.sports_data import SportsDao
-from statistical.db.models.sports import SportsRecord
 from statistical.db.utils import df_csv_to_lst, str_to_list
-from statistical.utils.pandas_util import split_data_frame_list
 from statistical.utils.stopwatch import StopWatch
-from statistical.utils.time_util import split_start_end_time_to_list, segmentation_cut_list
+from statistical.utils.time_util import segmentation_cut_list, split_start_end_time_to_csv
 
 
 class TimeParameter(object):
@@ -33,7 +31,7 @@ class SportsRecordStatistician(object):
         selection_names = self.__get_selection_names(
             indexs, columns, time_parm, filter_dic)
 
-        sports_records =SportsDao().get_sports_records(selection_names,time_parm.start,time_parm.end)
+        sports_records = SportsDao().get_sports_records(selection_names, time_parm.start, time_parm.end)
 
         return list(sports_records.dicts())
 
@@ -43,7 +41,7 @@ class SportsRecordStatistician(object):
         sports_dic = SportsDao().sports_dict
 
         cpu_ct = cpu_count()
-        # cpu_ct = 2
+        # cpu_ct = 1
         p = Pool(cpu_ct)  # 创建4个进程
         data_ct = len(sports_records)
         per_ct = int(data_ct / cpu_ct)
@@ -95,8 +93,6 @@ class SportsRecordStatistician(object):
 
         return df
 
-
-
     def __get_selection_names(self, indexs, columns, time_parm, filter_dic):
         selections = []
         selections.extend(indexs)
@@ -116,7 +112,6 @@ class SportsRecordStatistician(object):
             result.append(si)
         return result
         # return list(set(selections))  # distinct
-
 
     def __transfer_filter_dic(self, filter_dic, sports_dic):
         result = {}
@@ -162,24 +157,31 @@ class SportsRecordStatistician(object):
             df = df.assign(start_time=np.maximum(df.start_time, np.datetime64(time_parm.start)),
                            end_time=np.minimum(df.end_time, np.datetime64(time_parm.end)))
 
-            split_time_func = split_start_end_time_to_list(time_parm.segmentation)
+            # split_time_func = split_start_end_time_to_list(time_parm.segmentation)
+            split_time_csv_func = split_start_end_time_to_csv(time_parm.segmentation)
 
-            for index, row in df.iterrows():
-                time_rows.append(split_time_func(
-                    row['start_time'],
-                    row['end_time'],
-                    time_parm.segmentation))
+            df[time_parm.time_name] = df.apply(
+                lambda x: split_time_csv_func(x['start_time'], x['end_time'], time_parm.segmentation), axis=1)
 
-            df[time_parm.time_name] = time_rows
+            # for index, row in df.iterrows():
+            #     time_rows.append(split_time_func(
+            #         row['start_time'],
+            #         row['end_time'],
+            #         time_parm.segmentation))
+            #
+            # df[time_parm.time_name] = time_rows
             df = df.drop(columns=['start_time', 'end_time'])
-            df = split_data_frame_list(df, time_parm.time_name)
-            # split_items.append(time_parm.time_name)
+            # df = split_data_frame_list(df, time_parm.time_name)
+            split_items.append(time_parm.time_name)
 
         df1 = df.drop(columns=split_items, axis=1)
         for x in split_items:
             df1 = df1.join(df[x].str.split(',', expand=True).stack().reset_index(level=1, drop=True).rename(x))
+
         df = df1.reset_index(drop=True)
 
+        if time_parm.segmentation:
+            df[time_parm.time_name] = df[time_parm.time_name].astype(int)
         # for item in [time_parm.time_name]:
         #     df = split_data_frame_list(df, item)
         return df

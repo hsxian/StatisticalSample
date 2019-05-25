@@ -104,3 +104,53 @@ def split_start_end_time_to_list(freq):
 # for i in pd.date_range('2019-01-01 00:20:24.008143', '2019-01-02 00:30:00', freq='H'):
 #     strrr += '%s,' % (i.to_pydatetime().hour)
 # print(strrr, strrr[:-1].split(','))
+
+
+def __split_start_end_time_to_csv_year(start, end, freq):
+    result = ''
+    for i in pd.date_range(start, end + relativedelta(years=1), freq=freq):
+        result += str(i.to_pydatetime().year) + ','
+    return result[:-1]
+
+
+def __split_start_end_time_to_csv_month(start, end, freq):
+    result = ''
+    for i in pd.date_range(start, end + relativedelta(months=1), freq=freq):
+        result += str(i.to_pydatetime().month) + ','
+    return result[:-1]
+
+
+def __split_start_end_time_to_csv_day(start, end, freq):
+    result = ''
+    for i in pd.date_range(start, end, freq=freq):
+        result += str(i.to_pydatetime().day) + ','
+    return result[:-1]
+
+
+def __split_start_end_time_to_csv_week(start, end, freq):
+    result = ''
+    for i in pd.date_range(start, end, freq='D'):
+        result += str(i.to_pydatetime().weekday()) + ','
+    return result[:-1]
+
+
+def __split_start_end_time_to_csv_hour(start, end, freq):
+    result = ''
+    for i in pd.date_range(start, end, freq=freq):
+        result += str(i.to_pydatetime().hour) + ','
+    return result[:-1]
+
+
+def split_start_end_time_to_csv(freq):
+    '''freq is one of ['Y', 'M', 'D', 'W', 'H'],
+    start , end is datetime'''
+    if freq.endswith('Y'):
+        return __split_start_end_time_to_csv_year
+    elif freq.endswith('M'):
+        return __split_start_end_time_to_csv_month
+    elif freq.endswith('D'):
+        return __split_start_end_time_to_csv_day
+    elif freq.endswith('W'):
+        return __split_start_end_time_to_csv_week
+    elif freq.endswith('H'):
+        return __split_start_end_time_to_csv_hour
