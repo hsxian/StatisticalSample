@@ -1,17 +1,17 @@
 from concurrent.futures import ProcessPoolExecutor
 # from multiprocessing.dummy import  Pool#线程
-from datetime import datetime
 from multiprocessing import Pool  # 进程
 from multiprocessing import cpu_count
 
 import numpy as np
 import pandas as pd
-from dateutil.relativedelta import relativedelta
 
+from statistical.core.utils import get_selection_names, transfer_filter_dic
 from statistical.db.access.sports_data import SportsDao
 from statistical.db.utils import df_csv_to_lst, str_to_list
 from statistical.utils.stopwatch import StopWatch
 from statistical.utils.time_util import segmentation_cut_list, split_start_end_time_to_csv
+
 
 class SportsRecordStatistician(object):
 
@@ -19,7 +19,7 @@ class SportsRecordStatistician(object):
         indexs = str_to_list(indexs)
         columns = str_to_list(columns)
 
-        selection_names = self.__get_selection_names(
+        selection_names = get_selection_names(
             indexs, columns, time_parm, filter_dic)
 
         sports_records = SportsDao().get_sports_records(selection_names, time_parm.start, time_parm.end)
@@ -84,39 +84,10 @@ class SportsRecordStatistician(object):
 
         return df
 
-    def __get_selection_names(self, indexs, columns, time_parm, filter_dic):
-        selections = []
-        selections.extend(indexs)
-        selections.extend(columns)
-
-        if time_parm and time_parm.segmentation:
-            selections.extend(['start_time', 'end_time'])
-
-        if filter_dic:
-            selections.extend(filter_dic.keys())
-
-        result = []
-        for i in selections:
-            si = str(i)
-            if result.__contains__(si):
-                continue
-            result.append(si)
-        return result
-        # return list(set(selections))  # distinct
-
-    def __transfer_filter_dic(self, filter_dic, sports_dic):
-        result = {}
-        for k, vs in filter_dic.items():
-            ids = []
-            for v in vs:
-                ids.append(sports_dic[v])
-            result[k] = ids
-        return result
-
     def __filter_not_pivot_rows(self, df, indexs, columns, filter_dic):
         if not filter_dic:
             return df
-        pivot_items = self.__get_selection_names(indexs, columns, None, None)
+        pivot_items = get_selection_names(indexs, columns, None, None)
         not_pivot_items = set(filter_dic.keys()) - set(pivot_items)
         not_pivot_dic = {}
         for k, vs in filter_dic.items():
@@ -127,54 +98,41 @@ class SportsRecordStatistician(object):
             df = df[df.apply(lambda x: len(set(x[k]) & set(vs)) > 0, axis=1)]
         return df
 
-    def __transfer_csv_to_list(self, df, indexs, columns, filter_dic):
-        csv_to_list_items = self.__get_selection_names(
-            indexs, columns, None, filter_dic)
-        df_csv_to_lst(df, csv_to_list_items)
-
     def __filter_pivot_rows(self, df, indexs, columns, filter_dic):
         if not filter_dic:
             return df
-        pivot_items = self.__get_selection_names(indexs, columns, None, None)
+        pivot_items = get_selection_names(indexs, columns, None, None)
         for k, vs in filter_dic.items():
             if pivot_items.__contains__(k) and k in df.columns:
                 df = df[df[k].isin(vs)]
         return df
 
     def __split_pivot_rows(self, df, indexs, columns, time_parm):
-        split_items = self.__get_selection_names(indexs, columns, None, None)
+        split_items = get_selection_names(indexs, columns, None, None)
         if time_parm.segmentation:
             time_rows = []
             df = df.assign(start_time=np.maximum(df.start_time, np.datetime64(time_parm.start)),
                            end_time=np.minimum(df.end_time, np.datetime64(time_parm.end)))
 
-            # split_time_func = split_start_end_time_to_list(time_parm.segmentation)
             split_time_csv_func = split_start_end_time_to_csv(time_parm.segmentation)
 
             df[time_parm.time_name] = df.apply(
                 lambda x: split_time_csv_func(x['start_time'], x['end_time'], time_parm.segmentation), axis=1)
 
-            # for index, row in df.iterrows():
-            #     time_rows.append(split_time_func(
-            #         row['start_time'],
-            #         row['end_time'],
-            #         time_parm.segmentation))
-            #
-            # df[time_parm.time_name] = time_rows
             df = df.drop(columns=['start_time', 'end_time'])
-            # df = split_data_frame_list(df, time_parm.time_name)
+
             split_items.append(time_parm.time_name)
 
         df1 = df.drop(columns=split_items, axis=1)
         for x in split_items:
             df1 = df1.join(df[x].str.split(',', expand=True).stack().reset_index(level=1, drop=True).rename(x))
+            df1[x] = df1[x].astype(np.str)
 
         df = df1.reset_index(drop=True)
 
         if time_parm.segmentation:
-            df[time_parm.time_name] = df[time_parm.time_name].astype(int)
-        # for item in [time_parm.time_name]:
-        #     df = split_data_frame_list(df, item)
+            df[time_parm.time_name] = df[time_parm.time_name].astype(np.int16)
+        print(df.info())
         return df
 
     def __get_time_cut(self, df, time_parm):
@@ -193,16 +151,11 @@ class SportsRecordStatistician(object):
 
         filter_dic_id = filter_dic
         if filter_dic:
-            filter_dic_id = self.__transfer_filter_dic(filter_dic, sports_dic)
+            filter_dic_id = transfer_filter_dic(filter_dic, sports_dic)
 
         df = pd.DataFrame(sports_records)
 
         print('DataFrame:', sth.elapsed, '-+' * 20)
-        # print(df)
-
-        # self.__transfer_csv_to_list(df, indexs, columns, filter_dic_id)
-        # print('__transfer_csv_to_list:', sth.elapsed, '-+' * 20)
-        # sth.start()
         # print(df)
 
         df = self.__filter_not_pivot_rows(df, indexs, columns, filter_dic_id)
